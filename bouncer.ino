@@ -19,7 +19,7 @@ struct Obstacle {
 
 // La partie Setup concerne ce qui va être exécuté au démarrage de Kitco
 void setup() {
-
+  Serial.begin(9600);
   // Cette commande est nécessaire pour intialiser Kitco à son démarrage
   initialiserKitco(1);
   lcdBegin();
@@ -68,19 +68,22 @@ void createRectangle(int x0, int y0, int x1, int y1, boolean fill, boolean bw)
 
 
 void drawObstacle(struct Obstacle infos) {
-  createRectangle(8, 8, 22, 22, true, NOIR);
+  int x1 = infos.x + infos.width;
+  int y2 = infos.y + infos.height;
+  createRectangle(infos.x, infos.y, x1, y2, true, NOIR);
   updateDisplay();
 }
 
 
 void setupGame() {
   clearDisplay(BLANC);
-  struct Obstacle infos  = { 10 , 10 , 0, 0, 0 };
+  struct Obstacle infos  = { 10 , 10 , 8, 8, 0 };
   drawObstacle(infos);
 }
 
 // Loop est la boucle principale, va se lancer en boucle après Setup
 void loop() {
+  delay(500);
   setupGame();
 
 
