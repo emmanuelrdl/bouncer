@@ -6,7 +6,9 @@
 #define AIRE_JEU_X2 30
 #define AIRE_JEU_X1 30
 
+
 int record = 0;
+int setup_done = 0;
 
 struct Obstacle {
   byte height;
@@ -16,7 +18,7 @@ struct Obstacle {
   byte inverse;
 };
 
-
+struct Obstacle infos  = { 10 , 10 , 68, 0, 0 };
 // La partie Setup concerne ce qui va être exécuté au démarrage de Kitco
 void setup() {
   Serial.begin(9600);
@@ -75,17 +77,29 @@ void drawObstacle(struct Obstacle infos) {
 }
 
 
-void setupGame() {
+void setupGame(struct Obstacle infos) {
   clearDisplay(BLANC);
-  struct Obstacle infos  = { 10 , 10 , 8, 8, 0 };
   drawObstacle(infos);
 }
 
-// Loop est la boucle principale, va se lancer en boucle après Setup
-void loop() {
-  delay(500);
-  setupGame();
+void moveObstacle(struct Obstacle *infos) {
+  Serial.print((*infos).x);
+  (*infos).x -= 1;
+  clearDisplay(BLANC);
+  drawObstacle(*infos);
+}
 
+
+// Main loop run after setUp
+void loop() {
+  delay(200);
+  if (setup_done == 0){
+    setupGame(infos);
+    setup_done = 1;
+  } else {
+    moveObstacle(&infos);
+  }
+  
 
 
 }
