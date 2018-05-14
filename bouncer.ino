@@ -1,6 +1,6 @@
 
 // Nécessaire pour l'environnement Kitco
-#include "kitco.h"
+#include "kitco_fork.h"
 #include <EEPROM.h>
 
 #define AIRE_JEU_X2 30
@@ -18,7 +18,10 @@ struct Obstacle {
   byte inverse;
 };
 
-struct Obstacle infos  = { 10 , 10 , 68, 0, 0 };
+struct Obstacle infos[2]  = { 
+  { 10 , 10 , 68, 0, 0 },
+  { 10 , 10 , 38, 0, 0 }
+ };
 // La partie Setup concerne ce qui va être exécuté au démarrage de Kitco
 void setup() {
   Serial.begin(9600);
@@ -34,59 +37,28 @@ void setup() {
 // parameter, and colored with bw.
 // This function was grabbed from the SparkFun ColorLCDShield
 // library.
-void createRectangle(int x0, int y0, int x1, int y1, boolean fill, boolean bw)
-{
-  // check if the rectangle is to be filled
-  if (fill == 1)
-  {
-    int xDiff;
 
-    if(x0 > x1)
-      xDiff = x0 - x1; //Find the difference between the x vars
-    else
-      xDiff = x1 - x0;
 
-    while(xDiff > 0)
-    {
-      ligneEcran(x0, y0, x0, y1, bw);
-
-      if(x0 > x1)
-        x0--;
-      else
-        x0++;
-
-      xDiff--;
-    }
-  }
-  else
-  {
-    // best way to draw an unfilled rectangle is to draw four lines
-    ligneEcran(x0, y0, x1, y0, bw);
-    ligneEcran(x0, y1, x1, y1, bw);
-    ligneEcran(x0, y0, x0, y1, bw);
-    ligneEcran(x1, y0, x1, y1, bw);
+void drawObstacle(struct Obstacle infos[]) {
+  int i = 0;
+  for(i=0;i<2;i++) {
+    int x1 = infos[i].x + infos[i].width;
+    int y2 = infos[i].y + infos[i].height;
+    createRectangle(infos[i].x, infos[i].y, x1, y2, true, NOIR);
+    updateDisplay();
   }
 }
 
 
-void drawObstacle(struct Obstacle infos) {
-  int x1 = infos.x + infos.width;
-  int y2 = infos.y + infos.height;
-  createRectangle(infos.x, infos.y, x1, y2, true, NOIR);
-  updateDisplay();
-}
-
-
-void setupGame(struct Obstacle infos) {
+void setupGame(struct Obstacle infos[]) {
   clearDisplay(BLANC);
   drawObstacle(infos);
 }
 
 void moveObstacle(struct Obstacle *infos) {
-  Serial.print((*infos).x);
   (*infos).x -= 1;
   clearDisplay(BLANC);
-  drawObstacle(*infos);
+  drawObstacle(infos);
 }
 
 
@@ -97,7 +69,10 @@ void loop() {
     setupGame(infos);
     setup_done = 1;
   } else {
-    moveObstacle(&infos);
+    int i = 0;
+    for(i=0;i<2;i++) {
+      moveObstacle(&infos[i]);
+    }
   }
   
 
