@@ -41,20 +41,21 @@ void setup() {
 
 void drawObstacle(struct Obstacle infos[]) {
   int i = 0;
-  int x1 = infos[i].x;
-  int y1;
-  int y2;
   for(i=0;i<2;i++) {
+    int x1 = infos[i].x +infos[i].width;
+    int y1;
+    int y2;
     if (infos[i].inverse == 0) {
-      y1 = infos[i].y;
+      y1 = infos[i].y + 30;
       y2 = infos[i].y + infos[i].height;
     } else {
       y1 = infos[i].y;
       y2 = infos[i].y + infos[i].height;
     }
     createRectangle(infos[i].x, y1, x1, y2, true, NOIR);
-    updateDisplay();
   }
+     
+  updateDisplay();
 }
 
 
@@ -82,7 +83,7 @@ void moveObstacles(struct Obstacle infos[]){
 
 // Main loop run after setUp
 void loop() {
-  delay(200);
+  delay(500);
   if (setup_done == 0){
     setupGame(infos);
     setup_done = 1;
