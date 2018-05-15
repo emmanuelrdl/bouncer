@@ -18,9 +18,9 @@ struct Obstacle {
   byte inverse;
 };
 
-struct Obstacle infos[2]  = { 
+struct Obstacle infos[]  = { 
   { 10 , 10 , 68, 0, 0 },
-  { 10 , 10 , 38, 0, 0 }
+  { 10 , 10 , 38, 0, 1 }
  };
 // La partie Setup concerne ce qui va être exécuté au démarrage de Kitco
 void setup() {
@@ -41,10 +41,18 @@ void setup() {
 
 void drawObstacle(struct Obstacle infos[]) {
   int i = 0;
+  int x1 = infos[i].x;
+  int y1;
+  int y2;
   for(i=0;i<2;i++) {
-    int x1 = infos[i].x + infos[i].width;
-    int y2 = infos[i].y + infos[i].height;
-    createRectangle(infos[i].x, infos[i].y, x1, y2, true, NOIR);
+    if (infos[i].inverse == 0) {
+      y1 = infos[i].y;
+      y2 = infos[i].y + infos[i].height;
+    } else {
+      y1 = infos[i].y;
+      y2 = infos[i].y + infos[i].height;
+    }
+    createRectangle(infos[i].x, y1, x1, y2, true, NOIR);
     updateDisplay();
   }
 }
@@ -74,7 +82,7 @@ void moveObstacles(struct Obstacle infos[]){
 
 // Main loop run after setUp
 void loop() {
-  delay(400);
+  delay(200);
   if (setup_done == 0){
     setupGame(infos);
     setup_done = 1;
