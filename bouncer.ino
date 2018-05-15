@@ -55,24 +55,31 @@ void setupGame(struct Obstacle infos[]) {
   drawObstacle(infos);
 }
 
-void moveObstacle(struct Obstacle *infos) {
-  (*infos).x -= 1;
-  clearDisplay(BLANC);
-  drawObstacle(infos);
+void moveObstacle(struct Obstacle *info) {
+  (*info).x -= 1;
+  int x1 = (*info).x + (*info).width;
+  int y2 = (*info).y + (*info).height;
+  createRectangle((*info).x, (*info).y, x1, y2, true, NOIR);
+}
+
+void moveObstacles(struct Obstacle infos[]){
+   int i = 0;
+   clearDisplay(BLANC);
+    for(i=0;i<2;i++) {
+      moveObstacle(&infos[i]);
+    }
+    updateDisplay();
 }
 
 
 // Main loop run after setUp
 void loop() {
-  delay(200);
+  delay(400);
   if (setup_done == 0){
     setupGame(infos);
     setup_done = 1;
   } else {
-    int i = 0;
-    for(i=0;i<2;i++) {
-      moveObstacle(&infos[i]);
-    }
+    moveObstacles(infos);
   }
   
 
