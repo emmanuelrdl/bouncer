@@ -2,7 +2,9 @@
 
 #include "kitco_fork.h"
 #include <EEPROM.h>
-
+#define SCREEN_HEIGHT  48
+#define SCREEN_WIDTH  84
+#define OBSTACLES_COUNT  5
 
 int record = 0;
 int setup_done = 0;
@@ -16,8 +18,11 @@ struct Obstacle {
 };
 
 struct Obstacle obstacles[]  = { 
-  { 10 , 10 , 68, 0, 0 },
-  { 10 , 10 , 38, 0, 1 }
+  { 15 , 10 , 10, SCREEN_HEIGHT, 1 },
+  { 15 , 10 , 30, SCREEN_HEIGHT, 1 },
+  { 15 , 10 , 30, 0, 0 },
+  { 15 , 10 , 50, 0, 0 },
+  { 15 , 10 , 70, 0, 0 }
  };
 
 void setup() {
@@ -32,7 +37,7 @@ void setup() {
 
 void drawObstacles(struct Obstacle obstacles[]) {
   int i = 0;
-  for(i=0; i < sizeof(obstacles); i++) {
+  for(i=0; i <= OBSTACLES_COUNT; i++) {
     int x1 = obstacles[i].x + obstacles[i].width;
     int y1;
     int y2;
@@ -40,8 +45,8 @@ void drawObstacles(struct Obstacle obstacles[]) {
       y1 = obstacles[i].y ;
       y2 = y1 + obstacles[i].height;
     } else {
-      y1 = obstacles[i].y + 36;
-      y2 = y1 + obstacles[i].height;
+      y1 = obstacles[i].y;
+      y2 = y1 - obstacles[i].height;
     }
     createRectangle(obstacles[i].x, y1, x1, y2, true, NOIR);
   }
@@ -60,7 +65,7 @@ void setupGame(struct Obstacle obstacles[]) {
 void moveObstacles(struct Obstacle obstacles[]){
    int i = 0;
    clearDisplay(BLANC);
-    for(i=0; i < sizeof(obstacles); i++) {
+    for(i=0; i <= OBSTACLES_COUNT; i++) {
       obstacles[i].x -= 1;
     }
    drawObstacles(obstacles);
