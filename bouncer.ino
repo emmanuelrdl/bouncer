@@ -110,6 +110,32 @@ void moveObstacles(struct Obstacle obstacles[]){
    drawObstacles(obstacles);
 }
 
+void checkCollision() {
+  for(int i=0; i < OBSTACLES_COUNT; i++) {
+   int y1;
+   int y2;
+   if ((ball.x >= obstacles[i].x) && (ball.x + 5 <= obstacles[i].x + 7)) {
+    // Fake same X
+    if (obstacles[i].inverse == 0) {
+      y1 = obstacles[i].y ;
+      y2 = y1 + obstacles[i].height;
+    } else {
+      y1 = obstacles[i].y;
+      y2 = y1 - obstacles[i].height;
+    }
+    if ((ball.y >= y1) && ((ball.y <= y2)) ) {
+      clearDisplay(BLANC);
+      ecrireEcran("GAME OVER",25,25,NOIR);
+      updateDisplay();
+      delay(2000);
+      setup_done == 0;
+    }
+    
+   }
+   
+  }
+}
+
 
 // Main loop run after setUp
 void loop() {
@@ -117,14 +143,14 @@ void loop() {
   if (setup_done == 0){
     setupGame(obstacles, ball);
     setup_done = 1;
-  } else {
+  } else if (setup_done == 1)  {
     manageInput();
     clearDisplay(BLANC);
     drawBall(ball);
     moveObstacles(obstacles);
+    checkCollision();
     updateDisplay();
-  }
-  
+  } 
 
 
 }
