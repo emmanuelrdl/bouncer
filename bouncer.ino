@@ -44,6 +44,19 @@ void setup() {
 }
 
 
+void manageInput(){
+
+  if (toucheHaut()) {
+    ball.y--;
+  }
+
+  if (toucheBas() ) {
+    ball.y++;
+  }
+
+}
+
+
 
 void drawObstacles(struct Obstacle obstacles[]) {
   int i = 0;
@@ -64,6 +77,7 @@ void drawObstacles(struct Obstacle obstacles[]) {
      
   
 }
+
 
 void drawBall(struct Ball ball) {
   int x1 = ball.x;
@@ -104,6 +118,7 @@ void loop() {
     setupGame(obstacles, ball);
     setup_done = 1;
   } else {
+    manageInput();
     clearDisplay(BLANC);
     drawBall(ball);
     moveObstacles(obstacles);
