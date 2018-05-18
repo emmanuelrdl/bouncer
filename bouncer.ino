@@ -18,11 +18,11 @@ struct Obstacle {
 };
 
 struct Obstacle obstacles[]  = { 
-  { 15 , 10 , 10, SCREEN_HEIGHT, 1 },
-  { 15 , 10 , 50, SCREEN_HEIGHT, 1 },
-  { 15 , 10 , 20, 0, 0 },
-  { 15 , 10 , 60, 0, 0 },
-  { 15 , 10 , 80, 0, 0 }
+  { 15 , 7 , 10, SCREEN_HEIGHT, 1 },
+  { 15 , 7 , 75, SCREEN_HEIGHT, 1 },
+  { 15 , 7 , 35, 0, 0 },
+  { 15 , 7 , 50, 0, 0 },
+  { 15 , 7 , 65, 0, 0 }
  };
 
 void setup() {
@@ -71,7 +71,8 @@ void moveObstacles(struct Obstacle obstacles[]){
           obstacles[i].x -= 1;
         } else {
           obstacles[i].x = SCREEN_WIDTH;
-          //obstacles[i].height = rand() % 40;
+          obstacles[i].width = 7;
+          obstacles[i].height = rand() % 40;
         }
     }
    drawObstacles(obstacles);
@@ -80,7 +81,7 @@ void moveObstacles(struct Obstacle obstacles[]){
 
 // Main loop run after setUp
 void loop() {
-  delay(100);
+  delay(50);
   if (setup_done == 0){
     setupGame(obstacles);
     setup_done = 1;
