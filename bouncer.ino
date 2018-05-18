@@ -17,6 +17,7 @@ struct Obstacle {
   byte inverse;
 };
 
+
 struct Obstacle obstacles[]  = { 
   { 15 , 7 , 10, SCREEN_HEIGHT, 1 },
   { 15 , 7 , 75, SCREEN_HEIGHT, 1 },
@@ -24,6 +25,15 @@ struct Obstacle obstacles[]  = {
   { 15 , 7 , 50, 0, 0 },
   { 15 , 7 , 65, 0, 0 }
  };
+
+struct Ball {
+  byte height;
+  byte width;
+  byte x;
+  byte y;
+};
+
+struct Ball ball = { 5 , 5 , 5, 5 };
 
 void setup() {
   Serial.begin(9600);
@@ -52,12 +62,21 @@ void drawObstacles(struct Obstacle obstacles[]) {
     createRectangle(x1, y1, x2, y2, true, NOIR);
   }
      
-  updateDisplay();
+  
+}
+
+void drawBall(struct Ball ball) {
+  int x1 = ball.x;
+  int x2 = x1 + ball.width;
+  int y1 = ball.y;
+  int y2 = y1 + ball.height;
+  createRectangle(x1, y1, x2, y2, true, NOIR);
 }
 
 
-void setupGame(struct Obstacle obstacles[]) {
+void setupGame(struct Obstacle obstacles[], struct Ball ball) {
   clearDisplay(BLANC);
+  drawBall(ball);
   drawObstacles(obstacles);
 }
 
@@ -65,7 +84,6 @@ void setupGame(struct Obstacle obstacles[]) {
 
 void moveObstacles(struct Obstacle obstacles[]){
    int i = 0;
-   clearDisplay(BLANC);
     for(i=0; i < OBSTACLES_COUNT; i++) {
       if (obstacles[i].x > 0) {
           obstacles[i].x -= 1;
@@ -83,10 +101,13 @@ void moveObstacles(struct Obstacle obstacles[]){
 void loop() {
   delay(50);
   if (setup_done == 0){
-    setupGame(obstacles);
+    setupGame(obstacles, ball);
     setup_done = 1;
   } else {
+    clearDisplay(BLANC);
+    drawBall(ball);
     moveObstacles(obstacles);
+    updateDisplay();
   }
   
 
