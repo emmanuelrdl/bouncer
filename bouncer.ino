@@ -8,6 +8,7 @@
 
 int record = 0;
 int setup_done = 0;
+int game_over = 0;
 
 struct Obstacle {
   byte height;
@@ -35,6 +36,7 @@ struct Ball {
 
 struct Ball ball = { 5 , 5 , 5, 5 };
 
+
 void setup() {
   Serial.begin(9600);
   initialiserKitco(1);
@@ -54,6 +56,14 @@ void manageInput(){
     ball.y++;
   }
 
+}
+
+void manageGame(){
+   if (toucheDroite()) {
+    setup_done = 0;
+    game_over = 0;
+    ball = { 5 , 5 , 5, 5 };
+  }
 }
 
 
@@ -115,22 +125,22 @@ void checkCollision() {
    int y1;
    int y2;
    if ((ball.x >= obstacles[i].x) && (ball.x + 5 <= obstacles[i].x + 7)) {
-    // Fake same X
-    if (obstacles[i].inverse == 0) {
-      y1 = obstacles[i].y ;
-      y2 = y1 + obstacles[i].height;
-    } else {
-      y1 = obstacles[i].y;
-      y2 = y1 - obstacles[i].height;
-    }
-    if ((ball.y >= y1) && ((ball.y <= y2)) ) {
-      clearDisplay(BLANC);
-      ecrireEcran("GAME OVER",25,25,NOIR);
-      updateDisplay();
-      delay(2000);
-      setup_done == 0;
-    }
-    
+      // Fake same X
+      if (obstacles[i].inverse == 0) {
+        y1 = obstacles[i].y ;
+        y2 = y1 + obstacles[i].height;
+      } else {
+        y1 = obstacles[i].y;
+        y2 = y1 - obstacles[i].height;
+      }
+      if ((ball.y >= y1) && ((ball.y <= y2)) ) {
+        clearDisplay(BLANC);
+        ecrireEcran("GAME OVER",15,15,NOIR);
+        ecrireEcran("press to play",2,25,NOIR);
+        game_over = 1;
+        break;
+      }
+      
    }
    
   }
@@ -140,17 +150,20 @@ void checkCollision() {
 // Main loop run after setUp
 void loop() {
   delay(50);
-  if (setup_done == 0){
+  if (setup_done == 0 && game_over == 0){
     setupGame(obstacles, ball);
     setup_done = 1;
-  } else if (setup_done == 1)  {
+  } else if (setup_done == 1 && game_over == 0)  {
+    Serial.print(game_over);
     manageInput();
     clearDisplay(BLANC);
     drawBall(ball);
     moveObstacles(obstacles);
     checkCollision();
     updateDisplay();
-  } 
+  } else if (game_over == 1)  {
+    manageGame();
+  }
 
 
 }
