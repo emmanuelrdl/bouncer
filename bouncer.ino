@@ -124,7 +124,7 @@ void checkCollision() {
   for(int i=0; i < OBSTACLES_COUNT; i++) {
    int y1;
    int y2;
-   if ((ball.x >= obstacles[i].x) && (ball.x + 5 <= obstacles[i].x + 7)) {
+   if ((ball.x  + 5 > obstacles[i].x) && (ball.x < obstacles[i].x + 7)) {
       // Fake same X
       if (obstacles[i].inverse == 0) {
         y1 = obstacles[i].y ;
@@ -133,7 +133,7 @@ void checkCollision() {
         y1 = obstacles[i].y;
         y2 = y1 - obstacles[i].height;
       }
-      if ((ball.y >= y1) && ((ball.y <= y2)) ) {
+      if (ball.y + ball.height > y1 && ball.y < y2 ) {
         clearDisplay(BLANC);
         ecrireEcran("GAME OVER",15,15,NOIR);
         ecrireEcran("press to play",2,25,NOIR);
@@ -154,7 +154,6 @@ void loop() {
     setupGame(obstacles, ball);
     setup_done = 1;
   } else if (setup_done == 1 && game_over == 0)  {
-    Serial.print(game_over);
     manageInput();
     clearDisplay(BLANC);
     drawBall(ball);
